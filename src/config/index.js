@@ -22,7 +22,7 @@ const PRIVATE_KEY = fs.readFileSync(path.resolve(__dirname, './keys/private.key'
 const PUBLIC_KEY = fs.readFileSync(path.resolve(__dirname, './keys/public.key'));
 
 // 需要进行token校验的请求
-const CHECK_PATHS = ['/user/like/music', '/music/songIdArr', '/user/like', '/user/dislike'];
+const CHECK_PATHS = ['/user/like/music', '/music/songIdArr', '/user/like', '/user/dislike', '/user/info', '/user/upload/avatar'];
 module.exports = {
   DB_HOST,
   DB_PORT,

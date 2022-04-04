@@ -14,10 +14,11 @@ const UserRouter = express.Router()
 UserRouter.post('/login', (req, res, next) => {
   const { username, password } = req.body
   // console.log(username, password);
-  UserModel.findOne({ username, password: md5(password) })
+  UserModel.findOne({ username, password: md5(password) }, { like_music: 0 })
     .then(data => {
       if (data) {
         const token = jwt.sign({ id: data._id }, PRIVATE_KEY, { expiresIn: '7 days', algorithm: 'RS256' })
+        data.avatar_url = data.avatar_url ? '/imgs/user_imgs/' + data.avatar_url : ''
         res.send({ status: 1, data, token })
       }
       else res.send({ status: 0, msg: "用户名或密码错误" })
@@ -47,7 +48,7 @@ UserRouter.post('/register', (req, res, next) => {
 })
 
 // 上传头像
-const dirPath = path.join(__dirname, '../..', 'public/imgs/user_imgs')
+const dirPath = path.join(__dirname, '../../..', 'public/imgs/user_imgs')
 const storage = multer.diskStorage({
   // 文件存储的位置
   destination: function (req, file, cb) {
@@ -78,8 +79,8 @@ const uploadSingle = upload.single('image')
 
 // 上传头像
 UserRouter.post('/upload/avatar', (req, res, next) => {
-  const { _id } = req.body
-  // const _id = 6197956 + 'b0e76522b7a3d3c27'
+  res.header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, _id")
+  const { _id } = req.headers
   if (_id) {
     UserModel.findById(_id, (error, data) => {
       if (data.avatar_url) {
@@ -91,15 +92,17 @@ UserRouter.post('/upload/avatar', (req, res, next) => {
         })
       }
       uploadSingle(req, res, function (err) { //错误处理
-        if (err) return res.send({ status: 0, msg: '上传头像失败' })
+        if (err) {
+          console.log('err', err);
+          return res.send({ status: 0, msg: '上传头像失败' })
+        }
         var file = req.file
         UserModel.updateOne({ _id }, { $set: { avatar_url: file.filename } })
           .then(data => {
             res.send({
               status: 1,
               data: {
-                name: file.filename,
-                data,
+                name: '/imgs/user_imgs/' + file.filename,
                 url: `http://localhost:${SERVER_PORT}/imgs/user_imgs/` + file.filename
               }
             })
@@ -177,7 +180,7 @@ UserRouter.post('/dislike', (req, res, next) => {
     })
 })
 
-
+// 获取喜欢歌曲
 UserRouter.get('/like/music', (req, res, next) => {
   const { _id } = req.query
   UserModel.findById(_id, { _id: 1, like_music: 1 })
@@ -187,6 +190,20 @@ UserRouter.get('/like/music', (req, res, next) => {
     .catch(err => {
       console.log(err);
       res.send({ status: 0, msg: '获取喜欢歌曲列表出错，请重新尝试' })
+    })
+})
+
+// 根据ID获取用户信息
+UserRouter.get('/info', (req, res, next) => {
+  const { _id } = req.query
+  UserModel.findById(_id, { like_music: 0 })
+    .then(data => {
+      data.avatar_url = data.avatar_url ? '/imgs/user_imgs/' + data.avatar_url : ''
+      res.send({ status: 1, data })
+    })
+    .catch(err => {
+      console.log(err);
+      res.send({ status: 0, msg: '获取用户信息出错，请重新尝试' })
     })
 })
 
