@@ -22,4 +22,14 @@ function pageFilter(arr, pageNum, pageSize) {
   }
 }
 
+function checkFormat(str) {
+  if (/^[a-zA-Z]*$/.test(str)) {
+    return 0
+  }
+  else if (/^[\u4e00-\u9fa5]*$/.test(str)) {
+    return 1
+  }
+}
+
 exports.pageFilter = pageFilter
+exports.checkFormat = checkFormat
