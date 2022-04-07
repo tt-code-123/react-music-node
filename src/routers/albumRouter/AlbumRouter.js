@@ -16,12 +16,11 @@ AlbumRouter.get('/recommend', (req, res, next) => {
         data.push({
           ...album[index]._doc
         })
-        if (index === album.length - 1) {
-          res.send({ status: 1, data: { totalCount: album.length, albumArr: data } })
-        }
       })
     })
-
+    setTimeout(() => {
+      res.send({ status: 1, data: { totalCount: album.length, albumArr: data } })
+    }, 100)
 
   })
     .catch(err => {

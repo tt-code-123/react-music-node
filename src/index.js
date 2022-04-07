@@ -9,6 +9,7 @@ const UserRouter = require('@/routers/userRouter/UserRouter')
 const ImageRouter = require('@/routers/imageRouter/ImageRouter')
 const PlaylistRouter = require('@/routers/playlistRouter/PlaylistRouter')
 const SearchRouter = require('@/routers/searchRouter/SearchRouter')
+const DynamicRouter = require('@/routers/dynamicRouter/DynamicRouter')
 const tokenVerify = require('@/middleware/token_verify')
 const cors = require('cors');
 const app = express()
@@ -28,6 +29,7 @@ app.use('/user', UserRouter)
 app.use('/image', ImageRouter)
 app.use('/playlist', PlaylistRouter)
 app.use('/search', SearchRouter)
+app.use('/dynamic', DynamicRouter)
 
 // 通过mongoose连接数据库
 const { DB_HOST, DB_PORT, DB_ROOT, DB_USERNAME, DB_NAME, DB_PASSWORD, SERVER_PORT, } = config

@@ -79,7 +79,7 @@ const uploadSingle = upload.single('image')
 
 // 上传头像
 UserRouter.post('/upload/avatar', (req, res, next) => {
-  res.header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, _id")
+  res.header("Access-Control-Allow-Headers", "Content-Type, Content-Length, authorization, _id")
   const { _id } = req.headers
   if (_id) {
     UserModel.findById(_id, (error, data) => {
@@ -196,7 +196,7 @@ UserRouter.get('/like/music', (req, res, next) => {
 // 根据ID获取用户信息
 UserRouter.get('/info', (req, res, next) => {
   const { _id } = req.query
-  UserModel.findById(_id, { like_music: 0 })
+  UserModel.findById(_id, { like_music: 0, like_dynamic: 0 })
     .then(data => {
       data.avatar_url = data.avatar_url ? '/imgs/user_imgs/' + data.avatar_url : ''
       res.send({ status: 1, data })
@@ -205,6 +205,29 @@ UserRouter.get('/info', (req, res, next) => {
       console.log(err);
       res.send({ status: 0, msg: '获取用户信息出错，请重新尝试' })
     })
+})
+
+// 修改用户喜欢的动态
+UserRouter.post('/change/like/dynamic', (req, res, next) => {
+  const { _id, type, dynamic_id } = req.body
+  console.log(_id);
+  UserModel.findById(_id).then(user => {
+    const like_dynamic = [...user.like_dynamic]
+    if (type == 'like') {
+      like_dynamic.push(dynamic_id)
+      UserModel.updateOne({ _id: _id }, { $set: { like_dynamic: like_dynamic } }).then(data => {
+        res.send({ data: 1, status: 1 })
+      })
+    } else {
+      const new_dynamic = like_dynamic.filter(dy => JSON.stringify(dy) !== JSON.stringify(dynamic_id))
+      UserModel.updateOne({ _id: _id }, { $set: { like_dynamic: new_dynamic } }).then(data => {
+        res.send({ data: 1, status: 1 })
+      })
+    }
+  }).catch(err => {
+    console.log(err);
+    res.send({ msg: '修改用户喜欢动态失败，请重新尝试', status: 0 })
+  })
 })
 
 module.exports = UserRouter

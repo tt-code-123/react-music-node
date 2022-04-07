@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },     // 密码
   avatar_url: { type: String },    // 头像地址
   like_music: { type: Array },
+  like_dynamic: { type: Array }
 })
 
 const UserModel = mongoose.model("Users", UserSchema, "users_info")
