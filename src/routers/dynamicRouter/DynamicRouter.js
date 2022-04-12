@@ -15,8 +15,6 @@ DynamicRouter.get('/all', (req, res, next) => {
           for (let j = 0; j < newData.length; j++) {
             if (JSON.stringify(user.like_dynamic[i]) === JSON.stringify(newData[j]._id)) {
               newData[j]._doc.like = true
-            } else {
-              newData[j]._doc.like = false
             }
           }
         }
@@ -70,5 +68,6 @@ DynamicRouter.get('/all', (req, res, next) => {
     res.send({ status: 0, msg: '请求动态出错，请重新尝试！' })
   })
 })
+
 
 module.exports = DynamicRouter

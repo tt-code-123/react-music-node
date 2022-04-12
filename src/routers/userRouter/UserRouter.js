@@ -210,7 +210,6 @@ UserRouter.get('/info', (req, res, next) => {
 // 修改用户喜欢的动态
 UserRouter.post('/change/like/dynamic', (req, res, next) => {
   const { _id, type, dynamic_id } = req.body
-  console.log(_id);
   UserModel.findById(_id).then(user => {
     const like_dynamic = [...user.like_dynamic]
     if (type == 'like') {
