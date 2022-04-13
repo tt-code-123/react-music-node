@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 
 // 描述文档结构
 const CommentSchema = new mongoose.Schema({
-  _id: mongoose.ObjectId,
   content: { type: String, required: true },       // 评论内容
   dynamic_id: { type: mongoose.Schema.ObjectId, required: true },  // 动态Id
   from_id: { type: mongoose.Schema.ObjectId, required: true },     // 评论人ID
