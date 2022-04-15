@@ -6,7 +6,7 @@ const DB_PORT = 27017
 // 主机名
 const DB_HOST = 'localhost'
 // 数据库名
-const DB_NAME = 'music_db'
+const DB_NAME = 'music'
 // 数据库用户名
 const DB_USERNAME = 'admin'
 // 数据库密码
@@ -15,7 +15,7 @@ const DB_PASSWORD = 'admin'
 const DB_ROOT = 'admin'
 
 // 服务器端口号
-const SERVER_PORT = '8081'
+const SERVER_PORT = '8082'
 
 // 读取公钥私钥文件
 const PRIVATE_KEY = fs.readFileSync(path.resolve(__dirname, './keys/private.key'));
